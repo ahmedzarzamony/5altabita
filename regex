@@ -1,0 +1,11 @@
+$re = "~        #delimiter
+    ^           # start of input
+    -?          # minus, optional
+    [0-9]+      # at least one digit
+    (           # begin group
+        \.      # a dot
+        [0-9]+  # at least one digit
+    )           # end of group
+    ?           # group is optional
+    $           # end of input
+~xD";
