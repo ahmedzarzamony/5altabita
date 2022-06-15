@@ -1,2 +1,5 @@
 /Applications/MAMP/bin/php/php7.4.1/bin/php /usr/local/bin/composer install
+alias composer7 ='/Applications/MAMP/bin/php/php7.4.1/bin/php /usr/local/bin/composer'
+
+
 
