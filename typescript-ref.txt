@@ -1,0 +1,87 @@
+// NOTE: we can split between large numbers using "_" 1234567889 => 123_456_788_9
+// NOTE: by default ts warning is appearing when you use (any) type, you can shut it down by passing (false) value to (noImplicitAny) key on tsconfig.json file
+// NOTE: when you type hind a variable, you got a benfit of showing the autocomplete related method that helps the hinted type
+// NOTE: Tuples more useful when you use only two values, more than thit will make in complecated
+
+// # Typescript
+// - Run on a top of js and converted to vanill js
+// - making js statically-types, vanilla js is dynamically-types
+// - has a type hint checker to make sure the income value has match the variable needs
+// - the file has expention (.ts)
+// ---------
+// # Using Typescript
+// - tsc file.ts
+// - tsc --init ==> create a ts server that can compile all ts files at one, it generate "tsconfig.json" file with a lot of options
+// ---------
+// # tsconfig.json Options
+// - (rootDirs): define the dir that will read from
+// - (outDir): define the dir that will transpile ts files to
+// - (sourceMap): for debuging
+// - (noImplicitAny): ts doesnt recommend (any) type, making it true will support this, false value will allowing using (any) without showing warnings
+// - (noImplicitReturns): protect function from been without returns
+// - 
+// - 
+// ---------
+// # Topics
+// - (any) type
+// - Arrays
+// - Tuples
+// - Enums
+// - Functions
+// - Objects
+// ---------
+// # Types between Javascript  <=> Typescript
+// -               - number        - any
+// -               - tring         - unknown
+// -               - boolean       - never
+// -               - null          - enum
+// -               - undefined     - tuple
+// -               - object        
+// ---------
+// # Array
+let numbers1 = [];
+let numbers2:number[] = []; //-> For arry items to be a number
+numbers2.forEach(n => n.toString())
+// ---------
+// # Tuples
+let user:[number, string] = [1, 'Ahmed'];
+// ---------
+// # Enum
+enum Size {Small, Medium, Large}; //=> {1, 2, 3}
+enum Size2 {Small=4, Medium, Large}; //=> {4,5,6}
+enum Size3 {Small=4, Medium='x', Large='y'}; 
+const enum Size4 {Small=4, Medium='x', Large='y'}; //=> more optimized
+let mySize:Size = Size.Small;
+console.log(mySize);
+// ---------
+// # Functions
+function x(y:number) :void|number{}
+function x1(y:number=5) :void|number{}
+function x2(y?:number) :void|number{
+    if((y || 5) == 10){ //  becaus ey is optional, we can add a default value by this
+
+    }
+} // y is optional
+// ---------
+// # Objects
+let employee = { id:1}
+employee.name = 'Ahmed'; // typescript will give a warning because the base object doesn't have name
+
+let employee1:{id:number, name?:string} = { id:1}
+employee1.name = 'Ahmed'; // works
+
+let employee2:{ 
+    readonly id:number, 
+    name?:string,
+    retire: (date:Date)  => void //->function
+} = { 
+    id:1,
+    retire: (date:Date) => {
+        console.log(date);
+        
+    }
+}; // cant change the id value
+
+
+
+
