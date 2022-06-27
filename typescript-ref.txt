@@ -82,6 +82,497 @@ let employee2:{
     }
 }; // cant change the id value
 
+// ---------
+// # Type Aliases
+// -> using type as an object predefiend shaper
+type Job = {
+    id:number,
+    title:string
+};
+
+let doctor:Job = {
+    id: 1,
+    title: 'Specialiest'
+}
+
+// ---------
+// # Union Types
+function KgToLbs(weight: number|string):number {
+    //Narrowing
+    if(typeof weight == 'number'){
+        // this help that auto complete will provide all methods\properties that belong to weight type as a number
+        return weight * 2.2;
+    }else{
+        return parseInt(weight) * 2.2;
+    }
+}
+KgToLbs(10)
+KgToLbs('10kg')
+// ---------
+// # Intersection Types
+type Draggable = {
+    drag: () => void
+}
+
+type Resizable = {
+    resize: () => void
+}
+
+type UIWidget = Draggable & Resizable; //->Intersection
+
+let textBox: UIWidget = {
+    drag: () => {},
+    resize: () => {},
+}
+
+// ---------
+// # Literal Types
+
+let quantity: 50 = 50; // only 50 is allowed
+let quantity1: 50 | 100 = 100; // only 50 or 100 is allowed
+let metric: 'cm' | 'm' | 'k' = 'm'; 
+
+type metricType = 'cm' | 'm' | 'k';
+let metric2: metricType;
+
+// ---------
+// # Nullable Types
+
+function greet(name: string|null|undefined){
+    if(name){
+        console.log(name);
+        
+    }else{
+        console.log('Hola');
+        
+    }
+}
+
+greet(undefined);
+
+// ---------
+// # Optional Chaining (?)
+// -> (?) can work with any proberty and make it nullable
+
+type Customer = {birthday?:Date};
+function getCustomer(id:number): Customer | null | undefined {
+    // if(id !== null && id !== undefined){
+    //     return {
+    //         birthday: new Date()
+    //     }
+    // }else{
+    //     return null;
+    // }
+    return id === 0 ? null : {birthday: new Date()};
+}
+
+let customer = getCustomer(0);
+console.log(customer?.birthday);
+console.log(customer?.birthday?.getFullYear());
+// also customer?.[0] is worked
+// Optinal Call
+let log:any  = null;
+log?.('a')
 
 
+// ---------
+// # The Nullish Coaelscing Operator (?? Nullish check if that value is not undefiend or null only)
+// -> False values in js (undefiend, null, 0, false, '')
+
+let speed: number | null = null;
+let ride = {
+    // normal way
+    speed: speed !== null ? speed : 30 //-> next line is istead of this way
+    // Nullish Coaelscing Operator
+    speed: speed ?? 30 // -> Nullish mean that check speed value if it only undefiend or null
+}
+
+
+// ---------
+// # Type Assertions
+// -> tell the compiler that we wont implement this with spesific object or type
+let phone = <HTMLInputElement> document.getElementById('phone');
+phone.value;
+
+// ---------
+// # The unknown Type
+// -> it's preffared to use unknown instead of any because it require to making Narrowing to check the type for incoming paramerter or proberty
+
+function render(document:unknown){
+    if(typeof document === 'string'){ //-> Narrowing
+
+    }
+    //...
+}
+
+
+// ---------
+// # never Type
+// -> told the compiler that function doesn't return any value and also it's never end, so the next code will not be able to run, like the function that run an exception
+
+function reject(message: string): never{
+throw new Error(message);
+}
+console.log('Hola');// this code will not be reachable because the method before is terminate
+
+
+// ---------
+// # Creating Classes
+// -& Read-only and Optional Properties
+// -& Access Control Keywords (public, private, protected)
+// - - public: is the default
+// - - private: only available from inside the class only
+class Account{
+    readonly id: number;//only deal with constructor, can't be changed after that
+    owner: string;
+    private balance: number;
+    nickname?: string; // ? mean optional
+
+    constructor(id:number, owner:string, balance:number){
+        this.id = id;
+        this.owner = owner;
+        this.balance = balance;
+    }
+
+    private calculateTax():void{//cant be accessed from outside
+
+    }
+
+    deposit(amount: number): void{
+        if(amount <= 0){
+            throw new Error("Invalid amount")
+        }
+        this.balance += amount;
+    }
+
+    getBalance():number{
+        return this.balance;
+    }
+
+}
+
+
+// ---------
+// # Creating Objects
+
+let account = new Account(1, 'Ahmed', 0);
+account.deposit(100);
+console.log(account.getBalance());
+console.log(typeof account); //->object
+console.log(account instanceof Account); //->boolean experssion
+
+
+// ---------
+// # Parameter Properties
+
+class Account2{
+    // readonly id: number; //-> no need now will be automatically $
+    constructor(
+        public readonly id:number, 
+        public owner:string
+        ){
+        // public id:number will create a proberty and assign the value automaticlly, this way instead on the previus way
+        // this.id = id; //-> no need now will be automatically $
+    }
+}
+
+
+
+// ---------
+// # Getters and Setters
+
+class Account3{
+
+    constructor(private _balance:number){}
+
+    get balance():number{
+        return this._balance;
+    }
+
+    set balance(val):void{
+        this._balance = val;
+    }
+}
+
+
+// ---------
+// # Index Signatures
+
+class SeatAssignment{
+    [seatNumber: string]: string; //Index Signatures property
+}
+
+let seats = new SeatAssignment;
+seats.a1 = 'Ahmed';
+seats['a1'] = 'Ahmed';
+
+
+// ---------
+// # Static Members
+
+
+// The problem here is the activeRiders shoud be the same to aggregate rides count
+class Ride{
+    activeRiders:number = 0;
+
+    start(): number{
+        return this.activeRiders++;
+    }
+    end(): number{
+        return this.activeRiders--;
+    }
+}
+    
+let ride1 = new Ride();
+ride1.start();
+
+let ride2 = new Ride();
+ride2.start();
+
+console.log(ride1.activeRiders);
+console.log(ride2.activeRiders);
+
+// The solution with sttauc proberty
+
+class Ridee{
+    private static _activeRiders:number = 0;
+
+    start(): number{
+        return Ridee._activeRiders++;
+    }
+    end(): number{
+        return Ridee._activeRiders--;
+    }
+
+    static get activeRiders(){
+        return Ridee._activeRiders;
+    }
+}
+
+let ridee1 = new Ridee();
+ridee1.start();
+
+let ridee2 = new Ridee();
+ridee2.start();
+
+console.log(Ridee.activeRiders);
+
+
+
+// ---------
+// # Inheritance
+
+class Person{
+    constructor(public firstName:string, public lastName:string){}
+
+    walk():void{
+        console.log("Walking");
+    }
+
+    get fullName(){
+        return this.firstName + ' ' + this.lastName;
+    }
+}
+
+class Student extends Person{
+    constructor(public id:number, firstName:string, lastName:string){
+        super(firstName, lastName);
+    }
+
+    takeTest():void{
+        console.log("Taking a Test");
+        
+    }
+}
+
+let stu = new Student(1, 'Ahmed', 'Mohammed');
+stu.fullName;
+stu.walk();
+
+// Overriding
+
+class Teacher extends Person{
+    // if the construcure is the same as base class, no need for write it
+    //--
+    //Ovrriding fullname methid
+    override get fullName(){
+        return 'Proffesor ' + super.fullName;
+    }
+    
+}
+
+
+// ---------
+// # Polymorphism
+
+
+function print_names(people: Person[]){
+    for(let person of people)
+        console.log(person.fullName);
+        
+}
+
+print_names([
+    new Student(1, 'Ahmed', 'Mohammed'),
+    new Teacher('Ahmed', 'Mohammed')
+]);
+
+
+
+// ---------
+// # Abstract class and methods
+// - abstract class only used as a parent class and can't make an object from him
+// - abstract method doesnt have a body and the child classes must implement it
+
+abstract class Shape{
+    abstract render():void;
+}
+
+class Circle extends Shape{
+    render(): void {
+        console.log('Hola');
+        
+    }
+}
+
+
+// ---------
+// # Interfaces
+
+interface Calender{
+    name:string;
+    addEvent():void;
+    removeEvent():void;
+}
+
+// Extending between  interfaces
+
+interface CloudCalender extends Calender{
+
+}
+
+// INterface with classes
+
+class GooleClander implements Calender{
+    constructor(public name:string){}
+    addEvent():void{
+
+    }
+    removeEvent():void{
+
+    }
+}
+
+
+
+// ---------
+// # Generic Classes
+
+// The Problem :  what if we want to make the type optinal without using "any" and make the compaile adopt with incoming type
+
+class KeyPairValue{
+    constructor(public key:number, public value:string){}
+}
+
+let kv = new KeyPairValue(1, 'Ahmed');
+let kv2 = new KeyPairValue('1', 'Ahmed'); // it's wrong, because the key must be number and we won't to make another class or using "any"
+
+// The Solution
+
+class KeyPairValue2<K, V>{
+    constructor(public key:K, public value:V){}
+}
+
+let kv3 = new KeyPairValue2(1, 'Ahmed');
+let kv4 = new KeyPairValue2('1', 'Ahmed');
+let kv5 = new KeyPairValue2(true, 'Ahmed');
+let kv6 = new KeyPairValue2(1, []);
+
+
+
+
+// ---------
+// # Generic Functions and methods
+
+class ArrayUtil{
+    //Generic methods
+    static tArray<V>(val:V){
+        return [val];
+    }
+}
+ArrayUtil.tArray('a');
+
+//Generic Functions
+function wrapInArray<V>(val:V){
+    return [val]
+}
+wrapInArray(44)
+wrapInArray('b')
+
+
+
+// ---------
+// # Generic Interfaces
+
+interface Result<T>{
+    data: T | null;
+    error: string | null;
+}
+
+function fetch<T>(url:string):Result<T>{
+    return {
+        data:null,
+        error:null
+    }
+}
+
+interface User{
+    username:string;
+}
+
+interface Product{
+    title:string;
+}
+
+let result = fetch<Product>('url');
+let result2 = fetch<User>('url');
+
+
+
+// ---------
+// # Generic Constraints
+
+function echo<T>(value:T):T{
+    return value;
+}
+
+echo('a');
+echo(1);
+echo(true);
+
+function echo1<T extends number| string>(value:T):T{ // allow only number and string
+    return value;
+}
+
+echo1(1)
+echo1('a')
+
+function echo2<T extends { name:string }>(value:T):T{ 
+    return value;
+}
+
+echo2({name: 'a'})
+
+interface Person1{
+    name: string
+}
+
+function echo3<T extends Person1>(value:T):T{ 
+    return value;
+}
+
+class Customerx implements Person1{
+    constructor(public name:string){}
+}
+echo3(new Customerx('a'))
 
