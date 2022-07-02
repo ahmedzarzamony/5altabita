@@ -9,6 +9,12 @@
     No Courses
 </ng-template>
 
+//Or using hidden attr
+<div [hidden]="condition">
+        pla pla
+</div>
+
+// the  diffrent betwwen  ngif and hidden, hidden letthe code on the browser but only hidden while  ngif remove it from the dom
 ========================================================
 //ngContent
 <div class="panel panel-default">
